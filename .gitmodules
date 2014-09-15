@@ -1,0 +1,3 @@
+[submodule "Assets/sproto-cs"]
+	path = Assets/sproto-cs
+	url = https://github.com/jintiao/sproto-cs
