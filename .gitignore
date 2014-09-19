@@ -2,5 +2,6 @@
 /Library
 *.csproj
 *.sln
-.DS_Store
-
+*.DS_Store
+*.meta
+*.userprefs
