@@ -81,9 +81,10 @@ public class Main : MonoBehaviour {
 				return;
 			}
 
-			Debug.LogWarning (newObj.Dump ());
+			Debug.Log (newObj.Dump ());
 			if (newObj.Match (obj) == false) {
 				Debug.LogWarning ("Encode/Decode not match!");
+				return;
 			}
 		}
 	}
