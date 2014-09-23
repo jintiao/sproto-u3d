@@ -5,7 +5,10 @@ using System;
 
 public class Main : MonoBehaviour {
 	void Start () {
-		TestAll test = new TestAll ();
+		TestAll testall = new TestAll ();
+		testall.Run ();
+
+		Test test = new Test ();
 		test.Run ();
 	}
 }
