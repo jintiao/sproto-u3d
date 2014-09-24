@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System;
+using UnityEngine;
 
 public class Util {
-	public static string DumpStream (Stream stream) {
+	public static void DumpStream (Stream stream) {
 		string str = "";
 		
 		byte[] buf = new byte[16];
@@ -12,8 +13,8 @@ public class Util {
 		while ((count = stream.Read (buf, 0, buf.Length)) > 0) {
 			str += DumpLine (buf, count);
 		}
-		
-		return str;
+
+		Log (str);
 	}
 	
 	private static string DumpLine (byte[] buf, int count) {
@@ -28,8 +29,8 @@ public class Util {
 		return str;
 	}
 	
-	public static string DumpObject (SpObject obj) {
-		return DumpObject (obj, 0);
+	public static void DumpObject (SpObject obj) {
+		Log (DumpObject (obj, 0));
 	}
 	
 	private static string DumpObject (SpObject obj, int tab) {
@@ -48,10 +49,13 @@ public class Util {
                 foreach (SpObject o in obj.AsArray ()) {
                     str += DumpObject (o, tab + 1);
                 }
-            }
-            else if (obj.IsBuildinType ()) {
-                str = GetTab (tab) + obj.Value.ToString () + "\n";
-            }
+			}
+			else if (obj.Value == null) {
+				str = GetTab (tab) + "<null>\n";
+			}
+			else {
+				str = GetTab (tab) + obj.Value.ToString () + "\n";
+			}
         }
 		
 		return str;
@@ -62,5 +66,18 @@ public class Util {
 		for (int i = 0; i < n; i++)
 			str += "\t";
 		return str;
+	}
+
+	public static void Log (object obj) {
+		Debug.Log (obj);
+	}
+
+	public static void Assert(bool condition) {
+		if (condition == false)
+			throw new Exception();
+	}
+
+	public static string GetFullPath (string path) {
+		return Application.dataPath +  "/" + path;
 	}
 }

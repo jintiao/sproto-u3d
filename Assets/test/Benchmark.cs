@@ -1,36 +1,42 @@
 ﻿using System.Collections;
 using System.IO;
+using UnityEngine;
+using System;
 
-public class Test {
+public class Benchmark {
 	public void Run () {
 		LoadProto ();
 		
 		SpObject obj = CreateObject ();
-        Util.DumpObject (obj);
 		
-		MemoryStream encode_stream = new MemoryStream ();
+		MemoryStream encode_stream = new MemoryStream (1024);
+		MemoryStream pack_stream = new MemoryStream (1024);
+		MemoryStream unpack_stream = new MemoryStream (1024);
+
+		
 		SpCodec.Encode ("AddressBook", obj, encode_stream);
-		
 		encode_stream.Position = 0;
-        Util.DumpStream (encode_stream);
-		
-		encode_stream.Position = 0;
-		MemoryStream pack_stream = new MemoryStream ();
 		SpPacker.Pack (encode_stream, pack_stream);
-		
 		pack_stream.Position = 0;
-        Util.DumpStream (pack_stream);
-		
-		pack_stream.Position = 0;
-		MemoryStream unpack_stream = new MemoryStream ();
 		SpPacker.Unpack (pack_stream, unpack_stream);
+
+		double begin = GetMs ();
+
+		for (int i = 0; i < 100; i++) {
+			encode_stream.Position = 0;
+			pack_stream.Position = 0;
+			unpack_stream.Position = 0;
+
+			SpCodec.Encode ("AddressBook", obj, encode_stream);
+			//SpPacker.Pack (encode_stream, pack_stream);
+			//SpPacker.Unpack (pack_stream, unpack_stream);
+			//SpCodec.Decode ("AddressBook", unpack_stream)
+		}
+
+		double end = GetMs ();
 		
-		unpack_stream.Position = 0;
-        Util.DumpStream (unpack_stream);
-		
-		unpack_stream.Position = 0;
-		SpObject newObj = SpCodec.Decode ("AddressBook", unpack_stream);
-        Util.DumpObject (newObj);
+		encode_stream.Position = 0;
+		Debug.Log ("total: " + (end - begin)/1000  +"s");
 	}
 	
 	private SpObject CreateObject () {
@@ -83,11 +89,15 @@ public class Test {
 	}
 	
 	public void LoadProto () {
-
-		string path = Util.GetFullPath("AddressBook.sproto");
+		string path = Application.dataPath +  "/AddressBook.sproto";
 		
 		using (FileStream stream = new FileStream (path, FileMode.Open)) {
 			SpTypeManager.Import (stream);
 		}
+	}
+
+	double GetMs() {
+		TimeSpan ts = DateTime.Now - new DateTime(1960, 1, 1);
+		return ts.TotalMilliseconds;
 	}
 }

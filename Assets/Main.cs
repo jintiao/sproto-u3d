@@ -5,13 +5,10 @@ using System;
 
 public class Main : MonoBehaviour {
 	void Start () {
-		TestAll testall = new TestAll ();
-		testall.Run ();
+		new Test ().Run ();
+		new TestAll ().Run ();
+		new TestRpc ().Run ();
 
-		Test test = new Test ();
-		test.Run ();
-
-		TestRpc testrpc = new TestRpc ();
-		testrpc.Run ();
+		//new Benchmark().Run ();
 	}
 }
