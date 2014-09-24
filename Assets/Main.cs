@@ -8,7 +8,10 @@ public class Main : MonoBehaviour {
 		TestAll testall = new TestAll ();
 		testall.Run ();
 
-		//Test test = new Test ();
-		//test.Run ();
+		Test test = new Test ();
+		test.Run ();
+
+		TestRpc testrpc = new TestRpc ();
+		testrpc.Run ();
 	}
 }

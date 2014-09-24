@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System;
 
@@ -35,23 +34,25 @@ public class Util {
 	
 	private static string DumpObject (SpObject obj, int tab) {
 		string str = "";
-		
-		if (obj.IsTable ()) {
-			str = GetTab (tab) + "<table>\n";
-			foreach (KeyValuePair<string, SpObject> entry in obj.ToTable ()) {
-				str += GetTab (tab + 1) + "<key : " + entry.Key + ">\n";
-				str += DumpObject (entry.Value, tab + 1);
-			}
-		}
-		else if (obj.IsArray ()) {
-			str = GetTab (tab) + "<array>\n";
-			foreach (SpObject o in obj.ToArray ()) {
-				str += DumpObject (o, tab + 1);
-			}
-		}
-		else if (obj.IsBuildinType ()) {
-			str = GetTab (tab) + obj.Value.ToString () + "\n";
-		}
+
+        if (obj != null) {
+            if (obj.IsTable ()) {
+                str = GetTab (tab) + "<table>\n";
+                foreach (KeyValuePair<string, SpObject> entry in obj.AsTable ()) {
+                    str += GetTab (tab + 1) + "<key : " + entry.Key + ">\n";
+                    str += DumpObject (entry.Value, tab + 1);
+                }
+            }
+            else if (obj.IsArray ()) {
+                str = GetTab (tab) + "<array>\n";
+                foreach (SpObject o in obj.AsArray ()) {
+                    str += DumpObject (o, tab + 1);
+                }
+            }
+            else if (obj.IsBuildinType ()) {
+                str = GetTab (tab) + obj.Value.ToString () + "\n";
+            }
+        }
 		
 		return str;
 	}
