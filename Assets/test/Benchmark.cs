@@ -4,9 +4,9 @@ using System;
 
 public class Benchmark {
 	private SpObject obj;
-	MemoryStream encode_stream = new MemoryStream ();
-	MemoryStream pack_stream = new MemoryStream ();
-	MemoryStream unpack_stream = new MemoryStream ();
+	SpStream encode_stream = new SpStream (1024);
+	SpStream pack_stream = new SpStream (1024);
+	SpStream unpack_stream = new SpStream (1024);
 	
 	public Benchmark () {
 		LoadProto ();

@@ -15,9 +15,9 @@ public class TestAll {
 		CheckObj (obj);
         Util.DumpObject (obj);
 
-        MemoryStream encode_stream = new MemoryStream ();
-        MemoryStream decode_stream = new MemoryStream ();
-        MemoryStream pack_stream = new MemoryStream ();
+        SpStream encode_stream = new SpStream ();
+        SpStream decode_stream = new SpStream ();
+        SpStream pack_stream = new SpStream ();
 
         SpCodec.Encode ("foobar", obj, encode_stream);
 

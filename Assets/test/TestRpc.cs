@@ -19,7 +19,7 @@ public class TestRpc {
 
         SpObject foobar_request = new SpObject ();
         foobar_request.Insert ("what", "foo");
-        Stream req = client.Request ("foobar", foobar_request, 1);
+        SpStream req = client.Request ("foobar", foobar_request, 1);
 
         Util.Log ("request foobar size = " + req.Length);
 
@@ -31,7 +31,7 @@ public class TestRpc {
 
         SpObject foobar_response = new SpObject ();
         foobar_response.Insert ("ok", true);
-        Stream resp = server.Response (dispatched_req.Session, foobar_response);
+        SpStream resp = server.Response (dispatched_req.Session, foobar_response);
 
         Util.Log ("response package size = " + resp.Length);
 
@@ -43,7 +43,7 @@ public class TestRpc {
     }
 
     private void TestFoo (SpRpc server, SpRpc client) {
-        Stream req = client.Request ("foo", null, 2);
+        SpStream req = client.Request ("foo", null, 2);
 
 		Util.Log ("request foo size = " + req.Length);
 
@@ -52,7 +52,7 @@ public class TestRpc {
 
         SpObject foobar_response = new SpObject ();
         foobar_response.Insert ("ok", false);
-        Stream resp = server.Response (dispatched_req.Session, foobar_response);
+        SpStream resp = server.Response (dispatched_req.Session, foobar_response);
 
 		Util.Log ("response package size = " + resp.Length);
 
@@ -64,7 +64,7 @@ public class TestRpc {
     }
 
     private void TestBar (SpRpc server, SpRpc client) {
-        Stream req = client.Request ("bar");
+        SpStream req = client.Request ("bar");
 
 		Util.Log ("request bar size = " + req.Length);
 
@@ -73,7 +73,7 @@ public class TestRpc {
     }
 
     private void TestBlackhole (SpRpc server, SpRpc client) {
-        Stream req = client.Request ("blackhole");
+        SpStream req = client.Request ("blackhole");
 		Util.Log ("request blackhole size = " + req.Length);
     }
 	

@@ -8,21 +8,21 @@ public class Test {
 		SpObject obj = CreateObject ();
         Util.DumpObject (obj);
 		
-		MemoryStream encode_stream = new MemoryStream ();
+		SpStream encode_stream = new SpStream ();
 		SpCodec.Encode ("AddressBook", obj, encode_stream);
 		
 		encode_stream.Position = 0;
         Util.DumpStream (encode_stream);
 		
 		encode_stream.Position = 0;
-		MemoryStream pack_stream = new MemoryStream ();
+		SpStream pack_stream = new SpStream ();
 		SpPacker.Pack (encode_stream, pack_stream);
 		
 		pack_stream.Position = 0;
         Util.DumpStream (pack_stream);
 		
 		pack_stream.Position = 0;
-		MemoryStream unpack_stream = new MemoryStream ();
+		SpStream unpack_stream = new SpStream ();
 		SpPacker.Unpack (pack_stream, unpack_stream);
 		
 		unpack_stream.Position = 0;

@@ -1,0 +1,11 @@
+cpu		: 2.66GHz Intel Core i7
+mem		: 8 GB 1067 MHz DDR3
+platform	: OS X 10.9.5
+ide		: Unity 4.5.2
+
+Encode: 28.7248920898437 s
+Pack: 4.67098999023438 s
+EncodeAndPack: 31.2058859863281 s
+Unpack: 7.34783081054688 s
+Decode: 1.00155883789063 s
+UnpackAndDecode: 8.37214306640625 s

@@ -4,7 +4,7 @@ using System;
 using UnityEngine;
 
 public class Util {
-	public static void DumpStream (Stream stream) {
+	public static void DumpStream (SpStream stream) {
 		string str = "";
 		
 		byte[] buf = new byte[16];
