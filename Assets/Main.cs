@@ -8,7 +8,11 @@ public class Main : MonoBehaviour {
 		new Test ().Run ();
 		new TestAll ().Run ();
 		new TestRpc ().Run ();
+	}
 
-		//new Benchmark().Run ();
+	void OnGUI () {
+		if (GUI.Button (new Rect (10, 10, 100, 100), "Benchmark")){
+			new Benchmark().Run ();
+		}
 	}
 }

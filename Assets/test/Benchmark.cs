@@ -1,44 +1,147 @@
 ﻿using System.Collections;
 using System.IO;
-using UnityEngine;
 using System;
 
 public class Benchmark {
-	public void Run () {
+	private SpObject obj;
+	MemoryStream encode_stream = new MemoryStream ();
+	MemoryStream pack_stream = new MemoryStream ();
+	MemoryStream unpack_stream = new MemoryStream ();
+	
+	public Benchmark () {
 		LoadProto ();
 		
-		SpObject obj = CreateObject ();
-		
-		MemoryStream encode_stream = new MemoryStream (1024);
-		MemoryStream pack_stream = new MemoryStream (1024);
-		MemoryStream unpack_stream = new MemoryStream (1024);
-
-		
+		obj = CreateObject ();
 		SpCodec.Encode ("AddressBook", obj, encode_stream);
 		encode_stream.Position = 0;
 		SpPacker.Pack (encode_stream, pack_stream);
 		pack_stream.Position = 0;
 		SpPacker.Unpack (pack_stream, unpack_stream);
+	}
 
+	public void Run () {
+		Encode ();
+		Pack ();
+		EncodeAndPack ();
+		Unpack ();
+		Decode ();
+		UnpackAndDecode ();
+	}
+
+	public void Encode () {
 		double begin = GetMs ();
-
-		for (int i = 0; i < 100; i++) {
+		
+		for (int i = 0; i < 1000000; i++) {
 			encode_stream.Position = 0;
 			pack_stream.Position = 0;
 			unpack_stream.Position = 0;
-
+			
 			SpCodec.Encode ("AddressBook", obj, encode_stream);
 			//SpPacker.Pack (encode_stream, pack_stream);
 			//SpPacker.Unpack (pack_stream, unpack_stream);
-			//SpCodec.Decode ("AddressBook", unpack_stream)
+			unpack_stream.Position = 0;
+			//SpCodec.Decode ("AddressBook", unpack_stream);
 		}
-
-		double end = GetMs ();
 		
-		encode_stream.Position = 0;
-		Debug.Log ("total: " + (end - begin)/1000  +"s");
+		double end = GetMs ();
+		Util.Log ("Encode: " + (end - begin)/1000  +" s");
 	}
 	
+	public void Pack () {
+		double begin = GetMs ();
+		
+		for (int i = 0; i < 1000000; i++) {
+			encode_stream.Position = 0;
+			pack_stream.Position = 0;
+			unpack_stream.Position = 0;
+			
+			//SpCodec.Encode ("AddressBook", obj, encode_stream);
+			SpPacker.Pack (encode_stream, pack_stream);
+			//SpPacker.Unpack (pack_stream, unpack_stream);
+			unpack_stream.Position = 0;
+			//SpCodec.Decode ("AddressBook", unpack_stream);
+		}
+		
+		double end = GetMs ();
+		Util.Log ("Pack: " + (end - begin)/1000  +" s");
+	}
+	
+	public void EncodeAndPack () {
+		double begin = GetMs ();
+		
+		for (int i = 0; i < 1000000; i++) {
+			encode_stream.Position = 0;
+			pack_stream.Position = 0;
+			unpack_stream.Position = 0;
+			
+			SpCodec.Encode ("AddressBook", obj, encode_stream);
+			SpPacker.Pack (encode_stream, pack_stream);
+			//SpPacker.Unpack (pack_stream, unpack_stream);
+			unpack_stream.Position = 0;
+			//SpCodec.Decode ("AddressBook", unpack_stream);
+		}
+		
+		double end = GetMs ();
+		Util.Log ("EncodeAndPack: " + (end - begin)/1000  +" s");
+	}
+	
+	public void Unpack () {
+		double begin = GetMs ();
+		
+		for (int i = 0; i < 1000000; i++) {
+			encode_stream.Position = 0;
+			pack_stream.Position = 0;
+			unpack_stream.Position = 0;
+			
+			//SpCodec.Encode ("AddressBook", obj, encode_stream);
+			//SpPacker.Pack (encode_stream, pack_stream);
+			SpPacker.Unpack (pack_stream, unpack_stream);
+			unpack_stream.Position = 0;
+			//SpCodec.Decode ("AddressBook", unpack_stream);
+		}
+		
+		double end = GetMs ();
+		Util.Log ("Unpack: " + (end - begin)/1000  +" s");
+	}
+	
+	public void Decode () {
+		double begin = GetMs ();
+		
+		for (int i = 0; i < 1000000; i++) {
+			encode_stream.Position = 0;
+			pack_stream.Position = 0;
+			unpack_stream.Position = 0;
+			
+			//SpCodec.Encode ("AddressBook", obj, encode_stream);
+			//SpPacker.Pack (encode_stream, pack_stream);
+			//SpPacker.Unpack (pack_stream, unpack_stream);
+			unpack_stream.Position = 0;
+			SpCodec.Decode ("AddressBook", unpack_stream);
+		}
+		
+		double end = GetMs ();
+		Util.Log ("Decode: " + (end - begin)/1000  +" s");
+	}
+	
+	public void UnpackAndDecode () {
+		double begin = GetMs ();
+		
+		for (int i = 0; i < 1000000; i++) {
+			encode_stream.Position = 0;
+			pack_stream.Position = 0;
+			unpack_stream.Position = 0;
+			
+			//SpCodec.Encode ("AddressBook", obj, encode_stream);
+			//SpPacker.Pack (encode_stream, pack_stream);
+			SpPacker.Unpack (pack_stream, unpack_stream);
+			unpack_stream.Position = 0;
+			SpCodec.Decode ("AddressBook", unpack_stream);
+		}
+		
+		double end = GetMs ();
+		Util.Log ("UnpackAndDecode: " + (end - begin)/1000  +" s");
+	}
+
 	private SpObject CreateObject () {
 		SpObject obj = new SpObject ();
 
@@ -87,9 +190,9 @@ public class Benchmark {
 		
 		return obj;
 	}
-	
-	public void LoadProto () {
-		string path = Application.dataPath +  "/AddressBook.sproto";
+
+    public void LoadProto () {
+        string path = Util.GetFullPath ("AddressBook.sproto");
 		
 		using (FileStream stream = new FileStream (path, FileMode.Open)) {
 			SpTypeManager.Import (stream);
