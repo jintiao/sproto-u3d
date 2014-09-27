@@ -21,15 +21,23 @@ public class Benchmark {
 	}
 
 	public void Run () {
-		Encode ();
-		Pack ();
-		EncodeAndPack ();
-		Unpack ();
-		Decode ();
-		UnpackAndDecode ();
+		double encode = Encode ();
+		double pack = Pack ();
+		double encodeAndPack = EncodeAndPack ();
+		double unpack = Unpack ();
+		double decode = Decode ();
+		double unpackAndDecode = UnpackAndDecode ();
+
+		Util.Log ("Encode:\t" + encode +" s\n" + 
+		          "Pack:\t" + pack +" s\n" + 
+		          "EncodeAndPack:\t" + encodeAndPack +" s\n" + 
+		          "Unpack:\t" + unpack +" s\n" + 
+		          "Decode:\t" + decode +" s\n" + 
+		          "UnpackAndDecode:\t" + unpackAndDecode +" s\n"
+		          );
 	}
 
-	public void Encode () {
+	public double Encode () {
 		double begin = GetMs ();
 		
 		for (int i = 0; i < BENCHUMARK_RUN_TIMES; i++) {
@@ -45,10 +53,10 @@ public class Benchmark {
 		}
 		
 		double end = GetMs ();
-		Util.Log ("Encode: " + (end - begin)/1000  +" s");
+		return (end - begin)/1000;
 	}
 	
-	public void Pack () {
+	public double Pack () {
 		double begin = GetMs ();
 		
 		for (int i = 0; i < BENCHUMARK_RUN_TIMES; i++) {
@@ -64,10 +72,10 @@ public class Benchmark {
 		}
 		
 		double end = GetMs ();
-		Util.Log ("Pack: " + (end - begin)/1000  +" s");
+		return (end - begin)/1000;
 	}
 	
-	public void EncodeAndPack () {
+	public double EncodeAndPack () {
 		double begin = GetMs ();
 		
 		for (int i = 0; i < BENCHUMARK_RUN_TIMES; i++) {
@@ -83,10 +91,10 @@ public class Benchmark {
 		}
 		
 		double end = GetMs ();
-		Util.Log ("EncodeAndPack: " + (end - begin)/1000  +" s");
+		return (end - begin)/1000;
 	}
 	
-	public void Unpack () {
+	public double Unpack () {
 		double begin = GetMs ();
 		
 		for (int i = 0; i < BENCHUMARK_RUN_TIMES; i++) {
@@ -102,10 +110,10 @@ public class Benchmark {
 		}
 		
 		double end = GetMs ();
-		Util.Log ("Unpack: " + (end - begin)/1000  +" s");
+		return (end - begin)/1000;
 	}
 	
-	public void Decode () {
+	public double Decode () {
 		double begin = GetMs ();
 		
 		for (int i = 0; i < BENCHUMARK_RUN_TIMES; i++) {
@@ -121,10 +129,10 @@ public class Benchmark {
 		}
 		
 		double end = GetMs ();
-		Util.Log ("Decode: " + (end - begin)/1000  +" s");
+		return (end - begin)/1000;
 	}
 	
-	public void UnpackAndDecode () {
+	public double UnpackAndDecode () {
 		double begin = GetMs ();
 		
 		for (int i = 0; i < BENCHUMARK_RUN_TIMES; i++) {
@@ -140,7 +148,7 @@ public class Benchmark {
 		}
 		
 		double end = GetMs ();
-		Util.Log ("UnpackAndDecode: " + (end - begin)/1000  +" s");
+		return (end - begin)/1000;
 	}
 
 	private SpObject CreateObject () {

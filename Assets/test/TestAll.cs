@@ -15,14 +15,21 @@ public class TestAll {
 		CheckObj (obj);
         Util.DumpObject (obj);
 
-        SpStream encode_stream = new SpStream ();
+		SpStream small_stream = new SpStream (32);
+		bool success = SpCodec.Encode ("foobar", obj, small_stream);
+		Util.Assert (success == false);
+		Util.Log ("encode failed! require size : " + small_stream.Position);
+		small_stream.Position = 0;
+		Util.DumpStream (small_stream);
+
+		SpStream auto_stream = SpCodec.Encode ("foobar", obj);
+		auto_stream.Position = 0;
+		Util.DumpStream (auto_stream);
+
         SpStream decode_stream = new SpStream ();
         SpStream pack_stream = new SpStream ();
 
-        SpCodec.Encode ("foobar", obj, encode_stream);
-
-        encode_stream.Position = 0;
-        Util.DumpStream (encode_stream);
+		SpStream encode_stream = SpCodec.Encode ("foobar", obj);
 
         encode_stream.Position = 0;
         SpPacker.Pack (encode_stream, pack_stream);
