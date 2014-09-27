@@ -7,6 +7,7 @@ public class Benchmark {
 	SpStream encode_stream = new SpStream (1024);
 	SpStream pack_stream = new SpStream (1024);
 	SpStream unpack_stream = new SpStream (1024);
+	const int BENCHUMARK_RUN_TIMES = 1000000;
 	
 	public Benchmark () {
 		LoadProto ();
@@ -31,7 +32,7 @@ public class Benchmark {
 	public void Encode () {
 		double begin = GetMs ();
 		
-		for (int i = 0; i < 1000000; i++) {
+		for (int i = 0; i < BENCHUMARK_RUN_TIMES; i++) {
 			encode_stream.Position = 0;
 			pack_stream.Position = 0;
 			unpack_stream.Position = 0;
@@ -50,7 +51,7 @@ public class Benchmark {
 	public void Pack () {
 		double begin = GetMs ();
 		
-		for (int i = 0; i < 1000000; i++) {
+		for (int i = 0; i < BENCHUMARK_RUN_TIMES; i++) {
 			encode_stream.Position = 0;
 			pack_stream.Position = 0;
 			unpack_stream.Position = 0;
@@ -69,7 +70,7 @@ public class Benchmark {
 	public void EncodeAndPack () {
 		double begin = GetMs ();
 		
-		for (int i = 0; i < 1000000; i++) {
+		for (int i = 0; i < BENCHUMARK_RUN_TIMES; i++) {
 			encode_stream.Position = 0;
 			pack_stream.Position = 0;
 			unpack_stream.Position = 0;
@@ -88,7 +89,7 @@ public class Benchmark {
 	public void Unpack () {
 		double begin = GetMs ();
 		
-		for (int i = 0; i < 1000000; i++) {
+		for (int i = 0; i < BENCHUMARK_RUN_TIMES; i++) {
 			encode_stream.Position = 0;
 			pack_stream.Position = 0;
 			unpack_stream.Position = 0;
@@ -107,7 +108,7 @@ public class Benchmark {
 	public void Decode () {
 		double begin = GetMs ();
 		
-		for (int i = 0; i < 1000000; i++) {
+		for (int i = 0; i < BENCHUMARK_RUN_TIMES; i++) {
 			encode_stream.Position = 0;
 			pack_stream.Position = 0;
 			unpack_stream.Position = 0;
@@ -126,7 +127,7 @@ public class Benchmark {
 	public void UnpackAndDecode () {
 		double begin = GetMs ();
 		
-		for (int i = 0; i < 1000000; i++) {
+		for (int i = 0; i < BENCHUMARK_RUN_TIMES; i++) {
 			encode_stream.Position = 0;
 			pack_stream.Position = 0;
 			unpack_stream.Position = 0;
