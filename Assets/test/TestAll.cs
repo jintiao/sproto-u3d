@@ -22,24 +22,32 @@ public class TestAll {
 		small_stream.Position = 0;
 		Util.DumpStream (small_stream);
 
-		SpStream auto_stream = SpCodec.Encode ("foobar", obj);
-		auto_stream.Position = 0;
-		Util.DumpStream (auto_stream);
-
-        SpStream decode_stream = new SpStream ();
-        SpStream pack_stream = new SpStream ();
-
 		SpStream encode_stream = SpCodec.Encode ("foobar", obj);
+		encode_stream.Position = 0;
+		Util.DumpStream (encode_stream);
 
-        encode_stream.Position = 0;
-        SpPacker.Pack (encode_stream, pack_stream);
+		encode_stream.Position = 0;
+		small_stream.Position = 0;
+		success = SpPacker.Pack (encode_stream, small_stream);
+		Util.Assert (success == false);
+		Util.Log ("pack failed! require size : " + small_stream.Position);
+		small_stream.Position = 0;
+		Util.DumpStream (small_stream);
 
-        pack_stream.Position = 0;
-        Util.DumpStream (pack_stream);
-
-        pack_stream.Position = 0;
-        SpPacker.Unpack (pack_stream, decode_stream);
-
+		SpStream pack_stream = SpPacker.Pack (encode_stream);
+		pack_stream.Position = 0;
+		Util.DumpStream (pack_stream);
+		
+		pack_stream.Position = 0;
+		small_stream.Position = 0;
+		success = SpPacker.Unpack (pack_stream, small_stream);
+		Util.Assert (success == false);
+		Util.Log ("unpack failed! require size : " + small_stream.Position);
+		small_stream.Position = 0;
+		Util.DumpStream (small_stream);
+		
+		pack_stream.Position = 0;
+		SpStream decode_stream = SpPacker.Unpack (pack_stream);
         decode_stream.Position = 0;
         Util.DumpStream (decode_stream);
 

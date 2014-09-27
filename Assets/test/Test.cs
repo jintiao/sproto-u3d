@@ -13,6 +13,10 @@ public class Test {
 		
 		encode_stream.Position = 0;
         Util.DumpStream (encode_stream);
+
+		encode_stream.Position = 0;
+		SpObject newObj = SpCodec.Decode ("AddressBook", encode_stream);
+		Util.DumpObject (newObj);
 		
 		encode_stream.Position = 0;
 		SpStream pack_stream = new SpStream ();
@@ -29,7 +33,7 @@ public class Test {
         Util.DumpStream (unpack_stream);
 		
 		unpack_stream.Position = 0;
-		SpObject newObj = SpCodec.Decode ("AddressBook", unpack_stream);
+		newObj = SpCodec.Decode ("AddressBook", unpack_stream);
         Util.DumpObject (newObj);
 	}
 	
