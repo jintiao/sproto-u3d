@@ -8,12 +8,13 @@ public class Benchmark {
 	SpStream pack_stream = new SpStream (1024);
 	SpStream unpack_stream = new SpStream (1024);
 	const int BENCHUMARK_RUN_TIMES = 1000000;
+    SpTypeManager manager;
 	
 	public Benchmark () {
-		LoadProto ();
+        manager = LoadProto ();
 		
 		obj = CreateObject ();
-		SpCodec.Encode ("AddressBook", obj, encode_stream);
+		manager.Codec.Encode ("AddressBook", obj, encode_stream);
 		encode_stream.Position = 0;
 		SpPacker.Pack (encode_stream, pack_stream);
 		pack_stream.Position = 0;
@@ -45,11 +46,11 @@ public class Benchmark {
 			pack_stream.Position = 0;
 			unpack_stream.Position = 0;
 			
-			SpCodec.Encode ("AddressBook", obj, encode_stream);
+			manager.Codec.Encode ("AddressBook", obj, encode_stream);
 			//SpPacker.Pack (encode_stream, pack_stream);
 			//SpPacker.Unpack (pack_stream, unpack_stream);
 			unpack_stream.Position = 0;
-			//SpCodec.Decode ("AddressBook", unpack_stream);
+			//manager.Codec.Decode ("AddressBook", unpack_stream);
 		}
 		
 		double end = GetMs ();
@@ -64,11 +65,11 @@ public class Benchmark {
 			pack_stream.Position = 0;
 			unpack_stream.Position = 0;
 			
-			//SpCodec.Encode ("AddressBook", obj, encode_stream);
+			//manager.Codec.Encode ("AddressBook", obj, encode_stream);
 			SpPacker.Pack (encode_stream, pack_stream);
 			//SpPacker.Unpack (pack_stream, unpack_stream);
 			unpack_stream.Position = 0;
-			//SpCodec.Decode ("AddressBook", unpack_stream);
+			//manager.Codec.Decode ("AddressBook", unpack_stream);
 		}
 		
 		double end = GetMs ();
@@ -83,11 +84,11 @@ public class Benchmark {
 			pack_stream.Position = 0;
 			unpack_stream.Position = 0;
 			
-			SpCodec.Encode ("AddressBook", obj, encode_stream);
+			manager.Codec.Encode ("AddressBook", obj, encode_stream);
 			SpPacker.Pack (encode_stream, pack_stream);
 			//SpPacker.Unpack (pack_stream, unpack_stream);
 			unpack_stream.Position = 0;
-			//SpCodec.Decode ("AddressBook", unpack_stream);
+			//manager.Codec.Decode ("AddressBook", unpack_stream);
 		}
 		
 		double end = GetMs ();
@@ -102,11 +103,11 @@ public class Benchmark {
 			pack_stream.Position = 0;
 			unpack_stream.Position = 0;
 			
-			//SpCodec.Encode ("AddressBook", obj, encode_stream);
+			//manager.Codec.Encode ("AddressBook", obj, encode_stream);
 			//SpPacker.Pack (encode_stream, pack_stream);
 			SpPacker.Unpack (pack_stream, unpack_stream);
 			unpack_stream.Position = 0;
-			//SpCodec.Decode ("AddressBook", unpack_stream);
+			//manager.Codec.Decode ("AddressBook", unpack_stream);
 		}
 		
 		double end = GetMs ();
@@ -121,11 +122,11 @@ public class Benchmark {
 			pack_stream.Position = 0;
 			unpack_stream.Position = 0;
 			
-			//SpCodec.Encode ("AddressBook", obj, encode_stream);
+			//manager.Codec.Encode ("AddressBook", obj, encode_stream);
 			//SpPacker.Pack (encode_stream, pack_stream);
 			//SpPacker.Unpack (pack_stream, unpack_stream);
 			unpack_stream.Position = 0;
-			SpCodec.Decode ("AddressBook", unpack_stream);
+			manager.Codec.Decode ("AddressBook", unpack_stream);
 		}
 		
 		double end = GetMs ();
@@ -140,11 +141,11 @@ public class Benchmark {
 			pack_stream.Position = 0;
 			unpack_stream.Position = 0;
 			
-			//SpCodec.Encode ("AddressBook", obj, encode_stream);
+			//manager.Codec.Encode ("AddressBook", obj, encode_stream);
 			//SpPacker.Pack (encode_stream, pack_stream);
 			SpPacker.Unpack (pack_stream, unpack_stream);
 			unpack_stream.Position = 0;
-			SpCodec.Decode ("AddressBook", unpack_stream);
+			manager.Codec.Decode ("AddressBook", unpack_stream);
 		}
 		
 		double end = GetMs ();
@@ -200,13 +201,14 @@ public class Benchmark {
 		return obj;
 	}
 
-    public void LoadProto () {
+    private SpTypeManager LoadProto () {
+        SpTypeManager tm = null;
         string path = Util.GetFullPath ("AddressBook.sproto");
-		
-		using (FileStream stream = new FileStream (path, FileMode.Open)) {
-			SpTypeManager.Import (stream);
-		}
-	}
+        using (FileStream stream = new FileStream (path, FileMode.Open)) {
+            tm = SpTypeManager.Import (stream);
+        }
+        return tm;
+    }
 
 	double GetMs() {
 		TimeSpan ts = DateTime.Now - new DateTime(1960, 1, 1);

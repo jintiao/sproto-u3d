@@ -3,19 +3,20 @@ using System.IO;
 
 public class Test {
 	public void Run () {
-		LoadProto ();
+        SpTypeManager manager = LoadProto ();
 		
 		SpObject obj = CreateObject ();
+        CheckObj (obj);
         Util.DumpObject (obj);
 		
 		SpStream encode_stream = new SpStream ();
-		SpCodec.Encode ("AddressBook", obj, encode_stream);
+		manager.Codec.Encode ("AddressBook", obj, encode_stream);
 		
 		encode_stream.Position = 0;
         Util.DumpStream (encode_stream);
 
 		encode_stream.Position = 0;
-		SpObject newObj = SpCodec.Decode ("AddressBook", encode_stream);
+		SpObject newObj = manager.Codec.Decode ("AddressBook", encode_stream);
 		Util.DumpObject (newObj);
 		
 		encode_stream.Position = 0;
@@ -33,7 +34,8 @@ public class Test {
         Util.DumpStream (unpack_stream);
 		
 		unpack_stream.Position = 0;
-		newObj = SpCodec.Decode ("AddressBook", unpack_stream);
+        newObj = manager.Codec.Decode ("AddressBook", unpack_stream);
+        CheckObj (newObj);
         Util.DumpObject (newObj);
 	}
 	
@@ -85,13 +87,26 @@ public class Test {
 		
 		return obj;
 	}
-	
-	public void LoadProto () {
 
-		string path = Util.GetFullPath("AddressBook.sproto");
-		
-		using (FileStream stream = new FileStream (path, FileMode.Open)) {
-			SpTypeManager.Import (stream);
-		}
-	}
+    private SpTypeManager LoadProto () {
+        SpTypeManager tm = null;
+        string path = Util.GetFullPath ("AddressBook.sproto");
+        using (FileStream stream = new FileStream (path, FileMode.Open)) {
+            tm = SpTypeManager.Import (stream);
+        }
+        return tm;
+    }
+
+    private void CheckObj (SpObject obj) {
+        Util.Assert (obj["person"][0]["id"].AsInt () == 10000);
+        Util.Assert (obj["person"][0]["name"].AsString ().Equals ("Alice"));
+        Util.Assert (obj["person"][0]["phone"][0]["type"].AsInt () == 1);
+        Util.Assert (obj["person"][0]["phone"][0]["number"].AsString ().Equals ("123456789"));
+        Util.Assert (obj["person"][0]["phone"][1]["type"].AsInt () == 2);
+        Util.Assert (obj["person"][0]["phone"][1]["number"].AsString ().Equals ("87654321"));
+        Util.Assert (obj["person"][1]["id"].AsInt () == 20000);
+        Util.Assert (obj["person"][1]["name"].AsString ().Equals ("Bob"));
+        Util.Assert (obj["person"][1]["phone"][0]["type"].AsInt () == 3);
+        Util.Assert (obj["person"][1]["phone"][0]["number"].AsString ().Equals ("01234567890"));
+    }
 }

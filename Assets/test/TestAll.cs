@@ -6,7 +6,7 @@ using System.IO;
 
 public class TestAll {
     public void Run () {
-        LoadProto ();
+        SpTypeManager manager = LoadProto ();
 
 		// different ways to create SpObject
 		CheckObj (CreateObject ());
@@ -16,13 +16,13 @@ public class TestAll {
         Util.DumpObject (obj);
 
 		SpStream small_stream = new SpStream (32);
-		bool success = SpCodec.Encode ("foobar", obj, small_stream);
+        bool success = manager.Codec.Encode ("foobar", obj, small_stream);
 		Util.Assert (success == false);
 		Util.Log ("encode failed! require size : " + small_stream.Position);
 		small_stream.Position = 0;
 		Util.DumpStream (small_stream);
 
-		SpStream encode_stream = SpCodec.Encode ("foobar", obj);
+		SpStream encode_stream = manager.Codec.Encode ("foobar", obj);
 		encode_stream.Position = 0;
 		Util.DumpStream (encode_stream);
 
@@ -52,17 +52,19 @@ public class TestAll {
         Util.DumpStream (decode_stream);
 
         decode_stream.Position = 0;
-		SpObject newObj = SpCodec.Decode ("foobar", decode_stream);
+		SpObject newObj = manager.Codec.Decode ("foobar", decode_stream);
 		CheckObj (newObj);
         Util.DumpObject (newObj);
 	}
-	
-	private void LoadProto () {
-		string path = Util.GetFullPath("foobar.sproto");
-		using (FileStream stream = new FileStream (path, FileMode.Open)) {
-			SpTypeManager.Import (stream);
-		}
-	}
+
+    private SpTypeManager LoadProto () {
+        SpTypeManager tm = null;
+        string path = Util.GetFullPath ("foobar.sproto");
+        using (FileStream stream = new FileStream (path, FileMode.Open)) {
+            tm = SpTypeManager.Import (stream);
+        }
+        return tm;
+    }
 
     private SpObject CreateObject () {
         SpObject obj = new SpObject ();

@@ -5,11 +5,12 @@ using System;
 
 public class Main : MonoBehaviour {
 	private Client mClient = null;
+	private string mText = "";
 
 	void Start () {
 		new Test ().Run ();
 		new TestAll ().Run ();
-		//new TestRpc ().Run ();
+		new TestRpc ().Run ();
 	}
 
 	void OnGUI () {
@@ -17,10 +18,18 @@ public class Main : MonoBehaviour {
 			new Benchmark().Run ();
 		}
 
-		if (mClient != null)
-			GUI.enabled = false;
+		if (mClient != null) {
 
-		if (GUI.Button (new Rect (150, 10, 100, 100), "Client")){
+			mText = GUI.TextField (new Rect(120, 150, 200, 40), mText, 25);
+			if (GUI.Button (new Rect (330, 150, 80, 40), "Get")){
+				mClient.SendGet (mText);
+				mText = "";
+			}
+
+			GUI.enabled = false;
+		}
+
+		if (GUI.Button (new Rect (10, 150, 100, 100), "Client")){
 			mClient = new Client();
 			mClient.Run ();
 		}
