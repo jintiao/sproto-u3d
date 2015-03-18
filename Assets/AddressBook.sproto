@@ -12,5 +12,6 @@
 }
 
 .AddressBook {
-	person 0 : *Person
+	person 0 : *Person(id)
+	others 1 : *Person
 }

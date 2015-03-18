@@ -39,17 +39,11 @@ public class Util {
         if (obj != null) {
             if (obj.IsTable ()) {
                 str = GetTab (tab) + "<table>\n";
-                foreach (KeyValuePair<string, SpObject> entry in obj.AsTable ()) {
+                foreach (KeyValuePair<object, SpObject> entry in obj.AsTable ()) {
                     str += GetTab (tab + 1) + "<key : " + entry.Key + ">\n";
                     str += DumpObject (entry.Value, tab + 1);
                 }
             }
-            else if (obj.IsArray ()) {
-                str = GetTab (tab) + "<array>\n";
-                foreach (SpObject o in obj.AsArray ()) {
-                    str += DumpObject (o, tab + 1);
-                }
-			}
 			else if (obj.Value == null) {
 				str = GetTab (tab) + "<null>\n";
 			}

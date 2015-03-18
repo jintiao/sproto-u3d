@@ -7,36 +7,39 @@ public class Test {
 		
 		SpObject obj = CreateObject ();
         CheckObj (obj);
-        Util.DumpObject (obj);
-		
+
+		Util.Log ("Encode");
 		SpStream encode_stream = new SpStream ();
 		manager.Codec.Encode ("AddressBook", obj, encode_stream);
 		
 		encode_stream.Position = 0;
         Util.DumpStream (encode_stream);
-
+		
+		Util.Log ("Decode");
 		encode_stream.Position = 0;
 		SpObject newObj = manager.Codec.Decode ("AddressBook", encode_stream);
-		Util.DumpObject (newObj);
+		CheckObj (newObj);
 		
+		Util.Log ("Pack");
 		encode_stream.Position = 0;
 		SpStream pack_stream = new SpStream ();
 		SpPacker.Pack (encode_stream, pack_stream);
 		
 		pack_stream.Position = 0;
         Util.DumpStream (pack_stream);
-		
+
+		Util.Log ("Unpack");
 		pack_stream.Position = 0;
 		SpStream unpack_stream = new SpStream ();
 		SpPacker.Unpack (pack_stream, unpack_stream);
 		
 		unpack_stream.Position = 0;
         Util.DumpStream (unpack_stream);
-		
+
+		Util.Log ("Decode");
 		unpack_stream.Position = 0;
         newObj = manager.Codec.Decode ("AddressBook", unpack_stream);
         CheckObj (newObj);
-        Util.DumpObject (newObj);
 	}
 	
 	private SpObject CreateObject () {
@@ -64,7 +67,7 @@ public class Test {
 			}
 			p.Insert ("phone", phone);
 
-			person.Append (p);
+			person.Insert (p["id"].AsInt (), p);
 		}
 		{
 			SpObject p = new SpObject ();
@@ -80,7 +83,7 @@ public class Test {
 			}
 			p.Insert ("phone", phone);
 			
-			person.Append (p);
+			person.Insert (p["id"].AsInt (), p);
 		}
 
         obj.Insert ("person", person);
@@ -97,16 +100,17 @@ public class Test {
         return tm;
     }
 
-    private void CheckObj (SpObject obj) {
-        Util.Assert (obj["person"][0]["id"].AsInt () == 10000);
-        Util.Assert (obj["person"][0]["name"].AsString ().Equals ("Alice"));
-        Util.Assert (obj["person"][0]["phone"][0]["type"].AsInt () == 1);
-        Util.Assert (obj["person"][0]["phone"][0]["number"].AsString ().Equals ("123456789"));
-        Util.Assert (obj["person"][0]["phone"][1]["type"].AsInt () == 2);
-        Util.Assert (obj["person"][0]["phone"][1]["number"].AsString ().Equals ("87654321"));
-        Util.Assert (obj["person"][1]["id"].AsInt () == 20000);
-        Util.Assert (obj["person"][1]["name"].AsString ().Equals ("Bob"));
-        Util.Assert (obj["person"][1]["phone"][0]["type"].AsInt () == 3);
-        Util.Assert (obj["person"][1]["phone"][0]["number"].AsString ().Equals ("01234567890"));
+	private void CheckObj (SpObject obj) {
+		Util.DumpObject (obj);
+        Util.Assert (obj["person"][10000]["id"].AsInt () == 10000);
+        Util.Assert (obj["person"][10000]["name"].AsString ().Equals ("Alice"));
+        Util.Assert (obj["person"][10000]["phone"][0]["type"].AsInt () == 1);
+        Util.Assert (obj["person"][10000]["phone"][0]["number"].AsString ().Equals ("123456789"));
+        Util.Assert (obj["person"][10000]["phone"][1]["type"].AsInt () == 2);
+        Util.Assert (obj["person"][10000]["phone"][1]["number"].AsString ().Equals ("87654321"));
+        Util.Assert (obj["person"][20000]["id"].AsInt () == 20000);
+        Util.Assert (obj["person"][20000]["name"].AsString ().Equals ("Bob"));
+        Util.Assert (obj["person"][20000]["phone"][0]["type"].AsInt () == 3);
+        Util.Assert (obj["person"][20000]["phone"][0]["number"].AsString ().Equals ("01234567890"));
     }
 }

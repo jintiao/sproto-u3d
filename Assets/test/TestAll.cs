@@ -9,12 +9,13 @@ public class TestAll {
         SpTypeManager manager = LoadProto ();
 
 		// different ways to create SpObject
+		Util.Log ("Object Create Check");
 		CheckObj (CreateObject ());
 		CheckObj (CreateObject2 ());
 		SpObject obj = CreateObject3 ();
 		CheckObj (obj);
-        Util.DumpObject (obj);
 
+		Util.Log ("Encode");
 		SpStream small_stream = new SpStream (32);
         bool success = manager.Codec.Encode ("foobar", obj, small_stream);
 		Util.Assert (success == false);
@@ -26,6 +27,12 @@ public class TestAll {
 		encode_stream.Position = 0;
 		Util.DumpStream (encode_stream);
 
+		Util.Log ("Decode ");
+		encode_stream.Position = 0;
+		SpObject ooo = manager.Codec.Decode ("foobar", encode_stream);
+		CheckObj (ooo);
+		
+		Util.Log ("Pack");
 		encode_stream.Position = 0;
 		small_stream.Position = 0;
 		success = SpPacker.Pack (encode_stream, small_stream);
@@ -38,6 +45,7 @@ public class TestAll {
 		pack_stream.Position = 0;
 		Util.DumpStream (pack_stream);
 		
+		Util.Log ("Unpack");
 		pack_stream.Position = 0;
 		small_stream.Position = 0;
 		success = SpPacker.Unpack (pack_stream, small_stream);
@@ -50,11 +58,11 @@ public class TestAll {
 		SpStream decode_stream = SpPacker.Unpack (pack_stream);
         decode_stream.Position = 0;
         Util.DumpStream (decode_stream);
-
+		
+		Util.Log ("Decode ");
         decode_stream.Position = 0;
 		SpObject newObj = manager.Codec.Decode ("foobar", decode_stream);
 		CheckObj (newObj);
-        Util.DumpObject (newObj);
 	}
 
     private SpTypeManager LoadProto () {
@@ -106,10 +114,6 @@ public class TestAll {
         }
         {
             SpObject t = new SpObject ();
-            h.Append (t);
-        }
-        {
-            SpObject t = new SpObject ();
             t.Insert ("b", -100);
             t.Insert ("c", false);
             h.Append (t);
@@ -152,10 +156,6 @@ public class TestAll {
         }
         {
             SpObject t = new SpObject ();
-            h.Append (t);
-        }
-        {
-            SpObject t = new SpObject ();
             t.Insert ("b", -100);
             t.Insert ("c", false);
             h.Append (t);
@@ -187,7 +187,6 @@ public class TestAll {
 		                             "g", new SpObject (SpObject.ArgType.Array, true, false, true),
 		                             "h", new SpObject (SpObject.ArgType.Array,
 										                 new SpObject (SpObject.ArgType.Table, "b", 100),
-										                 new SpObject (),
 										                 new SpObject (SpObject.ArgType.Table, "b", -100, "c", false),
 										                 new SpObject (SpObject.ArgType.Table, "b", 0, "e", new SpObject (SpObject.ArgType.Array, "test")))
 		                   );
@@ -196,6 +195,7 @@ public class TestAll {
 	}
 
 	private void CheckObj (SpObject obj) {
+		Util.DumpObject (obj);
 		Util.Assert (obj["a"].AsString ().Equals ("hello"));
 		Util.Assert (obj["b"].AsInt () == 1000000);
 		Util.Assert (obj["c"].AsBoolean () == true);
@@ -213,11 +213,10 @@ public class TestAll {
 		Util.Assert (obj["g"][1].AsBoolean () == false);
 		Util.Assert (obj["g"][2].AsBoolean () == true);
 		Util.Assert (obj["h"][0]["b"].AsInt () == 100);
-		Util.Assert (obj["h"][1].Value == null);
-		Util.Assert (obj["h"][2]["b"].AsInt () == -100);
-		Util.Assert (obj["h"][2]["c"].AsBoolean () == false);
-		Util.Assert (obj["h"][3]["b"].AsInt () == 0);
-		Util.Assert (obj["h"][3]["e"][0].AsString ().Equals ("test"));
+		Util.Assert (obj["h"][1]["b"].AsInt () == -100);
+		Util.Assert (obj["h"][1]["c"].AsBoolean () == false);
+		Util.Assert (obj["h"][2]["b"].AsInt () == 0);
+		Util.Assert (obj["h"][2]["e"][0].AsString ().Equals ("test"));
 	}
 }
 

@@ -7,7 +7,7 @@ public class Benchmark {
 	SpStream encode_stream = new SpStream (1024);
 	SpStream pack_stream = new SpStream (1024);
 	SpStream unpack_stream = new SpStream (1024);
-	const int BENCHUMARK_RUN_TIMES = 1000000;
+	const int BENCHUMARK_RUN_TIMES = 100000;
     SpTypeManager manager;
 	
 	public Benchmark () {
