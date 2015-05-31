@@ -8,6 +8,7 @@ public class Main : MonoBehaviour {
 	private string mText = "";
 
 	void Start () {
+		new TestUnit ().Run ();
 		new Test ().Run ();
 		new TestAll ().Run ();
 		new TestRpc ().Run ();

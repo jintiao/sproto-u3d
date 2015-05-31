@@ -22,7 +22,7 @@ public class Util {
 		
 		for (int i = 0; i < count; i++) {
 			str += ((i < count) ? String.Format ("{0:X2}", buf[i]) : "  ");
-			str += ((i > 0) && (i < count - 1) && ((i + 1) % 8 == 0) ? " - " : " ");
+			str += ((i > 0) && (i < count - 1) && ((i + 1) % 8 == 0) ? " " : " ");
 		}
 		str += "\n";
 		
