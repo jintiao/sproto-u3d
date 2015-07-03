@@ -12,8 +12,12 @@ public class TestUnit {
 		Util.Log (s);
 		
 		Util.Log ("Encode");
-		SpStream encode_stream = new SpStream ();
-		manager.Codec.Encode ("ss", obj, encode_stream);
+		SpStream encode_stream = new SpStream (2);
+		bool ret = manager.Codec.Encode ("ss", obj, encode_stream);
+		Util.Assert (ret == false);
+		encode_stream = new SpStream (encode_stream.Position);
+		ret = manager.Codec.Encode ("ss", obj, encode_stream);
+		Util.Assert (ret == true);
 		encode_stream.Position = 0;
 		Util.DumpStream (encode_stream);
 
@@ -138,7 +142,8 @@ public class TestUnit {
 		manager = SpTypeManager.Import (proto);
 
 
-
+		
+		TestStr ("12345678");/*
 		TestNest ();
 		
 		TestStr ("");
@@ -150,7 +155,7 @@ public class TestUnit {
 		TestStr ("1234567812345678");
 		TestStr ("12345678123456781234567812345678");
 		TestStr ("123456781234567812345678123456781");
-		TestStr ("123456781234567812345678123456781234567"); 
+		TestStr ("123456781234567812345678123456781234567"); */
 	}
 	
 	private void CheckObj (SpObject obj) {
